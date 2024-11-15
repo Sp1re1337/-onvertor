@@ -1,0 +1,38 @@
+name: CI/CD for Temp Converter
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Крок 1: Клонуємо репозиторій
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Крок 2: Налаштовуємо Go
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.23.3
+
+      # Крок 3: Завантажуємо залежності
+      - name: Install dependencies
+        run: go mod tidy
+
+      # Крок 4: Збираємо проєкт
+      - name: Build project
+        run: go build -o convert
+
+      # Крок 5: Запускаємо тести
+      - name: Run tests
+        run: go test ./...
+
+      # Крок 6: Будуємо Docker-образ
+      - name: Build Docker image
+        run: docker build -t convert .
