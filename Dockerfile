@@ -1,5 +1,5 @@
 # Вказуємо базовий образ
-FROM golang:1.23.0-alpine
+FROM golang:1.23.3-alpine
 
 # Створюємо робочу директорію
 WORKDIR /app
