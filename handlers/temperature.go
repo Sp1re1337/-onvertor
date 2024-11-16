@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"encoding/json"
-	"enconding/json"
-	"linux/utils"
+	"linux/cache"
 	"net/http"
 )
 
@@ -14,6 +14,10 @@ type Temperature struct {
 	Result   float64 `json:"result"`
 }
 
+func GenerateCacheKey(temp Temperature) string {
+	return fmt.Sprintf("%f:%s:%s", temp.Value, temp.UnitFrom, temp.UnitTo)
+}
+
 func ConvertTemperature(w http.ResponseWriter, r *http.Request) {
 	var temp Temperature
 	err := json.NewDecoder(r.Body).Decode(&temp)
@@ -22,7 +26,7 @@ func ConvertTemperature(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cacheKey := utils.GenerateCacheKey(temp)
+	cacheKey := GenerateCacheKey(temp)
 
 	if cachedResult, found := cache.Get(cacheKey); found {
 		temp.Result = cachedResult
@@ -45,5 +49,5 @@ func ConvertTemperature(w http.ResponseWriter, r *http.Request) {
 
 
  w.Header().Set("Content-Type", "application/json")
- json.NewEncoder(w).Enconde(temp)
+ json.NewEncoder(w).Encode(temp)
 }
