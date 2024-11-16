@@ -1,4 +1,4 @@
-name: CI/CD for Temp Converter
+name: CI/CD for convert
 
 on:
   push:
